@@ -1,0 +1,67 @@
+# Headless disables managed account auth by default. Reuse the existing
+# account in place, with separate session/profile storage for delegation.
+- id: credentials
+  disabled: false
+  config:
+    path: !!js process.env.DSH_BRIDGE_CREDENTIALS
+    watch: false
+- id: authorization
+  disabled: false
+- id: deepseek-account
+  disabled: false
+  config:
+    desktopPlatform: darwin
+- id: agent-default-model
+  config:
+    provider: deepseek-account
+    model: deepseek-flash
+    reasoningEffort: low
+# Suppress supplemental logs and auxiliary title inference.
+- id: session-log-deepseek
+  disabled: true
+- id: session-title-llm
+  disabled: true
+# Expose no tools that can access files, execute commands, change config,
+# consult other sessions, spawn workers, or make external requests.
+- id: agent-instructions
+  disabled: true
+- id: skill-filesystem
+  disabled: true
+- id: tool-skill
+  disabled: true
+- id: tool-plugin-manager
+  disabled: true
+- id: tool-working-directory
+  disabled: true
+- id: tool-bash
+  disabled: true
+- id: tool-pwsh
+  disabled: true
+- id: tool-jobs
+  disabled: true
+- id: tool-fs
+  disabled: true
+- id: tool-fs-search
+  disabled: true
+- id: tool-subagent-control
+  disabled: true
+- id: tool-subagent
+  disabled: true
+- id: tool-subagent-fork
+  disabled: true
+- id: tool-workflow
+  disabled: true
+- id: tool-web
+  disabled: true
+- id: web-fetch-http
+  disabled: true
+- id: web-search-deepseek
+  disabled: true
+- id: web-deepseek-api
+  disabled: true
+- id: mcp-resources
+  disabled: true
+- id: tool-todo
+  disabled: true
+- id: tool-goal
+  disabled: true

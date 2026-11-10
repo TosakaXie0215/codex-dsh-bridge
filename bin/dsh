@@ -1,0 +1,22 @@
+#!/bin/sh
+# Adapt the upstream MCP server's fixed dsh invocation.
+set -eu
+
+if [ "$#" -eq 1 ] && [ "$1" = "--version" ]; then
+    exec "$DSH_BRIDGE_NODE" "$DSH_BRIDGE_CLI" --version
+fi
+if [ "$#" -ne 3 ] || [ "$1" != "--profile" ] || [ "$2" != "headless" ]; then
+    printf '%s\n' 'Expected a single headless task.' >&2
+    exit 2
+fi
+
+root=$(CDPATH= cd -- "${0%/*}/.." && pwd -P)
+umask 077
+mkdir -p "$DSH_HOME" "$root/.runtime/workspace"
+cd "$root/.runtime/workspace"
+export DSH_PERMISSION_MODE=read-only DSH_TELEMETRY_DISABLED=1
+exec "$DSH_BRIDGE_NODE" "$DSH_BRIDGE_CLI" --profile headless \
+    --patch "$root/headless.patch.yml" --permission-mode read-only \
+    --approval-policy never - <<EOF_TASK
+$3
+EOF_TASK
